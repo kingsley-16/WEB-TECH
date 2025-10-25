@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upkicks Custom Order (Revised)</title>
+    <link rel="stylesheet" href="styles.css"> 
+    <style>
+        /* Internal CSS for simple form styling */
+        .container { max-width: 600px; margin: 20px auto; padding: 30px; background-color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        h2 { text-align: center; color: #007bff; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="email"], input[type="number"], select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        input[type="checkbox"] { margin-right: 10px; }
+        .error-message { color: red; font-size: 0.9em; margin-top: 5px; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 1.1em; margin-top: 20px; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>👟 Upkicks Customization Form</h2>
+        
+        <form id="customOrderForm" onsubmit="return validateForm()">
+            
+            <h3>Customer Details (JS Validation)</h3>
+            
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" placeholder="John Doe">
+                <div id="fullNameError" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="text" id="email" name="email" placeholder="john.doe@example.com">
+                <div id="emailError" class="error-message"></div>
+            </div>
+
+            <h3>Custom Shoe Specs (JS Validation)</h3>
+
+            <div class="form-group">
+                <label for="shoeModel">Shoe Model</label>
+                <select id="shoeModel" name="shoeModel">
+                    <option value="">-- Select a Model --</option>
+                    <option value="velocity">Velocity Runner</option>
+                    <option value="aero">Aero High-Top</option>
+                    <option value="pulse">Pulse Elite</option>
+                </select>
+                <div id="shoeModelError" class="error-message"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="primaryColor">Primary Color</label>
+                <select id="primaryColor" name="primaryColor">
+                    <option value="">-- Select Color --</option>
+                    <option value="black">Aero Black</option>
+                    <option value="white">Purity White</option>
+                    <option value="blue">Electric Blue</option>
+                    <option value="red">Velocity Red</option>
+                </select>
+                <div id="primaryColorError" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="shoeSize">Shoe Size (US Men's)</label>
+                <input type="number" id="shoeSize" name="shoeSize" placeholder="Min 6, Max 15">
+                <div id="shoeSizeError" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="customTag">Custom Tag/Initial (Max 5 Chars)</label>
+                <input type="text" id="customTag" name="customTag" placeholder="E.g., JD1">
+                <div id="customTagError" class="error-message"></div>
+            </div>
+
+            <h3>Shipping & Quantity</h3>
+            
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" id="quantity" name="quantity" min="1" max="5" required value="1">
+            </div>
+
+            <div class="form-group">
+                <label for="shipCountry">Shipping Country</label>
+                <input type="text" id="shipCountry" name="shipCountry" placeholder="Must be text only">
+                <div id="shipCountryError" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="zipCode">Zip/Postal Code</label>
+                <input type="text" id="zipCode" name="zipCode" placeholder="5 or 6 digits/chars">
+                <div id="zipCodeError" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="specialRequests">Special Requests</label>
+                <textarea id="specialRequests" name="specialRequests" rows="3" maxlength="150"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                <label for="agreeTerms" style="display: inline;">I agree to the <a href="#">Upkicks Customization Terms</a>.</label>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number (Optional)</label>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" placeholder="E.g., 555-123-4567">
+            </div>
+
+            <button type="submit">Submit Custom Order</button>
+        </form>
+    </div>
+
+    <script>
+        function validateForm() {
+            let isValid = true;
+            
+            // Helper function to show error and set isValid
+            function setError(elementId, message) {
+                const errorElement = document.getElementById(elementId + 'Error');
+                errorElement.textContent = message;
+                if (message) isValid = false;
+            }
+
+            // Reset all error messages
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+            // 1. Full Name (Presence check - JS)
+            const fullName = document.getElementById('fullName').value.trim();
+            if (fullName.length === 0) {
+                setError('fullName', 'Full Name is required.');
+            }
+
+            // 2. Email Address (Format check - JS)
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                setError('email', 'Please enter a valid email address.');
+            }
+            
+            // 3. Shoe Model (Required selection - JS)
+            const shoeModel = document.getElementById('shoeModel').value;
+            if (shoeModel === "") {
+                setError('shoeModel', 'Please select a shoe model.');
+            }
+            
+            // 4. Primary Color (Required selection - JS)
+            const primaryColor = document.getElementById('primaryColor').value;
+            if (primaryColor === "") {
+                setError('primaryColor', 'Please select a primary color.');
+            }
+
+            // 5. Shoe Size (Numeric and Range - JS)
+            const shoeSize = document.getElementById('shoeSize').value;
+            if (shoeSize === "" || isNaN(shoeSize)) {
+                setError('shoeSize', 'Shoe size must be a number.');
+            } else {
+                const size = parseFloat(shoeSize);
+                if (size < 6 || size > 15) {
+                    setError('shoeSize', 'Size must be between 6 and 15.');
+                }
+            }
+
+            // 6. Custom Tag (Length Check - JS)
+            const customTag = document.getElementById('customTag').value.trim();
+            if (customTag.length > 5) {
+                setError('customTag', 'Custom tag cannot exceed 5 characters.');
+            }
+
+            // 7. Shipping Country (Text only check - JS)
+            const shipCountry = document.getElementById('shipCountry').value.trim();
+            const textOnlyRegex = /^[a-zA-Z\s]+$/;
+            if (shipCountry.length === 0) {
+                 setError('shipCountry', 'Shipping country is required.');
+            } else if (!textOnlyRegex.test(shipCountry)) {
+                setError('shipCountry', 'Country name must contain letters and spaces only.');
+            }
+            
+            // 8. Zip/Postal Code (Pattern/Length Check - JS)
+            const zipCode = document.getElementById('zipCode').value.trim();
+            // Allows 5 or 6 alphanumeric characters
+            const zipRegex = /^[a-zA-Z0-9]{5,6}$/; 
+            if (zipCode.length === 0) {
+                setError('zipCode', 'Zip/Postal code is required.');
+            } else if (!zipRegex.test(zipCode)) {
+                setError('zipCode', 'Zip code must be 5 or 6 alphanumeric characters.');
+            }
+
+            // Final message
+            if (isValid) {
+                alert("Customization order validated and submitted! (Simulated)");
+            }
+            return isValid;
+        }
+    </script>
+
+</body>
+</html>
